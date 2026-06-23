@@ -35,10 +35,17 @@ $fallbacks: m3-list.get-tokens();
 // Apply the disabled opacity to the checkbox/radio indicators.
 // TODO(mmalerba): We should probably stop doing this and allow the checkbox/radio to decide
 //  what their disabled state looks like. This is done for now to avoid screenshot diffs.
-.mdc-list-item--disabled {
+.mat-mdc-list-option.mdc-list-item--disabled {
   .mdc-radio,
   .mdc-checkbox {
     opacity: token-utils.slot(list-list-item-disabled-label-text-opacity, $fallbacks);
+
+    // The selection indicator inherits `cursor: pointer` from the radio/checkbox
+    // structure styles and its own disabled cursor never applies because the
+    // native control is `display: none`. Reset it so a disabled option doesn't
+    // look clickable. The `.mat-mdc-list-option` host class is included so this
+    // wins over the structure styles' `cursor: pointer` on specificity.
+    cursor: default;
   }
 }
 
