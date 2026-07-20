@@ -815,6 +815,29 @@ describe('MatSelectionList without forms', () => {
     });
   });
 
+  describe('with single selection and a disabled option', () => {
+    let fixture: ComponentFixture<SingleSelectionListWithDisabledOption>;
+    let listOptionElements: DebugElement[];
+
+    beforeEach(() => {
+      fixture = TestBed.createComponent(SingleSelectionListWithDisabledOption);
+      listOptionElements = fixture.debugElement.queryAll(By.directive(MatListOption));
+      fixture.detectChanges();
+    });
+
+    it('should not show a pointer cursor on the radio indicator of a disabled option', () => {
+      const enabledRadio = listOptionElements[0].nativeElement.querySelector('.mdc-radio');
+      const disabledRadio = listOptionElements[1].nativeElement.querySelector('.mdc-radio');
+
+      expect(getComputedStyle(disabledRadio).cursor)
+        .withContext('Expected the disabled option radio indicator to use the default cursor')
+        .toBe('default');
+      expect(getComputedStyle(enabledRadio).cursor)
+        .withContext('Expected the enabled option radio indicator to keep the pointer cursor')
+        .toBe('pointer');
+    });
+  });
+
   describe('with list disabled', () => {
     let fixture: ComponentFixture<SelectionListWithListDisabled>;
     let listOption: DebugElement[];
@@ -1791,6 +1814,17 @@ class SelectionListWithSelectedOption {}
   changeDetection: ChangeDetectionStrategy.Eager,
 })
 class SingleSelectionListWithSelectedOption {}
+
+@Component({
+  template: `
+  <mat-selection-list [multiple]="false">
+    <mat-list-option>Enabled item</mat-list-option>
+    <mat-list-option [disabled]="true">Disabled item</mat-list-option>
+  </mat-selection-list>`,
+  imports: [MatListModule],
+  changeDetection: ChangeDetectionStrategy.Eager,
+})
+class SingleSelectionListWithDisabledOption {}
 
 @Component({
   template: `
